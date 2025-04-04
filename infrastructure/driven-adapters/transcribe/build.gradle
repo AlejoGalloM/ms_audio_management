@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(':model')
+    implementation 'org.springframework:spring-context'
+    implementation 'software.amazon.awssdk:transcribestreaming:2.31.13'
+    implementation 'software.amazon.awssdk:transcribe:2.31.13'
+}

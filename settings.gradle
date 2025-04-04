@@ -1,0 +1,34 @@
+pluginManagement {
+    repositories {
+        //mavenLocal()
+        //maven { url '...' }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'ms_audio_management'
+
+include ':app-service'
+include ':model'
+include ':usecase'
+project(':app-service').projectDir = file('./applications/app-service')
+project(':model').projectDir = file('./domain/model')
+project(':usecase').projectDir = file('./domain/usecase')
+include ':transcribe'
+project(':transcribe').projectDir = file('./infrastructure/driven-adapters/transcribe')
+include ':metrics'
+project(':metrics').projectDir = file('./infrastructure/helpers/metrics')
+include ':exceptions'
+project(':exceptions').projectDir = file('./infrastructure/helpers/exceptions')
+include ':reactive-web'
+project(':reactive-web').projectDir = file('./infrastructure/entry-points/reactive-web')
+include ':s3-repository'
+project(':s3-repository').projectDir = file('./infrastructure/driven-adapters/s3-repository')
+include ':extract-data'
+project(':extract-data').projectDir = file('./infrastructure/helpers/extract-data')
+include ':dynamo-db'
+project(':dynamo-db').projectDir = file('./infrastructure/driven-adapters/dynamo-db')
+include ':web-socket'
+project(':web-socket').projectDir = file('./infrastructure/entry-points/web-socket')
+include ':zip-decode'
+project(':zip-decode').projectDir = file('./infrastructure/helpers/zip-decode')
