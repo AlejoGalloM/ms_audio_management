@@ -12,12 +12,10 @@ import software.amazon.awssdk.core.BytesWrapper;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
-import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 
@@ -50,7 +48,7 @@ public class S3Operations {
     private PutObjectRequest configurePutObject(String bucketName, String objectKey) {
         return PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key(objectKey)
+                .key(s3ConnectionProperties.storageBucketName() + "/" + objectKey)
                 .build();
     }
 
@@ -58,7 +56,7 @@ public class S3Operations {
         return Mono.fromFuture(() -> {
                     GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                             .bucket(s3ConnectionProperties.storageBucketName())
-                            .key(fileName)
+                            .key(s3ConnectionProperties.storageBucketName() + "/" + fileName)
                             .build();
 
                     return s3AsyncClient.getObject(getObjectRequest, AsyncResponseTransformer.toBytes());
@@ -70,27 +68,5 @@ public class S3Operations {
                                 .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) ->
                                         new RuntimeException("El archivo no se generó dentro del tiempo esperado"))
                 );
-    }
-
-
-    public Mono<Void> copyFile(String sourceFileName, String targetFileName) {
-        return Mono.create(sink -> {
-            String targetKey = "trascriptions" + "/" + targetFileName;
-
-            CopyObjectRequest copyObjectRequest = CopyObjectRequest.builder()
-                    .copySource(s3ConnectionProperties.storageBucketName() + "/" + sourceFileName)
-                    .bucket(s3ConnectionProperties.storageBucketName())
-                    .key(targetKey)
-                    .build();
-
-            s3AsyncClient.copyObject(copyObjectRequest)
-                    .whenComplete((response, exception) -> {
-                        if (exception != null) {
-                            sink.error(exception);
-                        } else {
-                            sink.success();
-                        }
-                    });
-        });
     }
 }

@@ -39,14 +39,16 @@ public class WebSocketTranscriptionHandler implements WebSocketHandler {
                                 .flatMap(result -> session.send(Mono.just(session.textMessage(result))));
                         case "obtain" -> audioUseCase.getTranscribe(partes[1])
                                 .flatMap(result -> session.send(Mono.just(session.textMessage(result))));
+                        case "lambdaStatus" ->
+                                session.send(Mono.just(session.textMessage("Audio transcribo exitosamente")));
                         default -> session.send(Mono.just(session.textMessage("Error: Comando no válido.")));
                     };
                 })
                 .then();
 
-        Flux<Void> keepAliveFlow = Flux.interval(Duration.ofSeconds(5))
-                .flatMap(interval -> session.send(Mono.just(session.textMessage("Conexión activa"))));
+//        Flux<Void> keepAliveFlow = Flux.interval(Duration.ofSeconds(5))
+//                .flatMap(interval -> session.send(Mono.just(session.textMessage("Conexión activa"))));
 
-        return Mono.when(receiveFlow, keepAliveFlow);
+        return Mono.when(receiveFlow);
     }
 }

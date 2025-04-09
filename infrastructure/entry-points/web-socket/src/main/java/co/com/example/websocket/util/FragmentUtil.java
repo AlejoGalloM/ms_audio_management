@@ -45,17 +45,17 @@ public class FragmentUtil {
                             .flatMap(result -> {
                                 log.info("Archivo procesado exitosamente para audio: {}", idAudio);
                                 fragmentosCache.remove(idAudio);
-                                return session.send(Mono.just(session.textMessage("Archivo recibido y procesado")));
+                                return Mono.just(session.textMessage("Archivo recibido y procesado")).then();
                             });
                 } catch (Exception ex) {
                     log.error("Error descomprimiendo o procesando el archivo: {}", ex.getMessage());
-                    return session.send(Mono.just(session.textMessage("Error procesando archivo: " + ex.getMessage())));
+                    return Mono.just(session.textMessage("Error procesando archivo: " + ex.getMessage())).then();
                 }
             }
-            return session.send(Mono.just(session.textMessage("Fragmento recibido con éxito.")));
+            return Mono.just(session.textMessage("Fragmento recibido con éxito.")).then();
         } catch (Exception e) {
             log.error("Error procesando fragmento: {}", e.getMessage());
-            return session.send(Mono.just(session.textMessage("Error procesando fragmento: " + e.getMessage())));
+            return Mono.just(session.textMessage("Error procesando fragmento: " + e.getMessage())).then();
         }
     }
 

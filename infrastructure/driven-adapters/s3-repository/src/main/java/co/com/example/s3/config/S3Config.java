@@ -15,6 +15,7 @@ import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.Bucket;
 import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
 
+import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -33,7 +34,8 @@ public class S3Config {
     public S3AsyncClient localS3AsyncClient(S3ConnectionProperties s3Properties) {
         return S3AsyncClient.builder()
                 .region(Region.of(s3Properties.region()))
-                .credentialsProvider(ProfileCredentialsProvider.create("AWS-ExampleAccount"))
+                .endpointOverride(URI.create(s3Properties.endpoint()))
+                .credentialsProvider(ProfileCredentialsProvider.create("default"))
                 .build();
     }
 

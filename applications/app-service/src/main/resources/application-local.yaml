@@ -23,6 +23,10 @@ adapter:
     s3:
       storageBucketName: "mytranscribebucketexample"
       region: "us-east-1"
+      endpoint: http://localhost:4566
+    transcribe:
+      region: "us-east-1"
+      endpoint: http://localhost:4566
 aws:
   dynamodb:
     endpoint: "http://localhost:8010"
