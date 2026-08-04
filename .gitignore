@@ -13,6 +13,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+.agents/
 
 # External tool builders
 .externalToolBuilders/
@@ -334,3 +335,5 @@ gradle-app.setting
 # -----
 *.hprof
 
+# Local Copilot skills and agent config
+.agents/
